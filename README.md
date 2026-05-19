@@ -1,97 +1,229 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# BhcJobs
 
-# Getting Started
+BhcJobs is a React Native job listing app focused on a clean landing page, reusable cards, animated UI, and API-driven sections.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Project Overview
 
-## Step 1: Start Metro
+This project includes:
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- Theme-aware light/dark UI
+- Animated hero section with wave background
+- Reusable job card components
+- loading states
+- Horizontal trending and hot job sections
+- Authentication flow screens
+- API integration for jobs, companies, industries, and authentication
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Tech Stack
 
-```sh
-# Using npm
-npm start
+- React Native 0.85.3
+- React 19
+- TypeScript
+- React Navigation
+- React Native Reanimated
+- React Native SVG
+- React Native Vector Icons
+- Axios
+- AsyncStorage
 
-# OR using Yarn
-yarn start
+## Screens / Pages
+
+### Landing Screen
+
+The landing page currently composes these sections:
+
+- Hero
+- IndustrySection
+- TrendingJobsSection
+- RecommendedSection
+- PopularCompaniesSection
+- HotJobsSection
+
+### Authentication Screens
+
+- LoginScreen
+- SignupScreen
+- OtpScreen
+
+## Reusable Components
+
+### Landing Components
+
+- Hero - banner section with search UI
+- Wave - animated SVG wave background
+- TrendingJobCard - compact card for trending jobs
+- TrendingJobsSection - horizontal trending jobs list
+- RecommendedJobCard - detailed reusable job card
+- HotJobsSection - horizontally scrolling hot jobs list
+- IndustrySection - industry showcase block
+- PopularCompaniesSection - company showcase block
+- RecommendedSection - extra recommendation block on landing
+
+### Common / Layout Components
+
+- Loading - reusable spinner
+- AppLayout - shared page wrapper
+- Header - top application header
+
+## API Integration
+
+### Job API
+
+- `GET /api/job/get`
+
+Used by:
+
+- TrendingJobsSection
+- RecommendedJobsSection
+- HotJobsSection
+
+UI filtering rules:
+
+- Trending jobs: `is_trending === 1`
+- Hot jobs: `is_hot === 1`
+- Expired jobs are filtered out using `expiry`
+
+### Recommended Card Reuse
+
+- `RecommendedJobCard` is reused inside the hot jobs section for a consistent card design.
+
+### Company API
+
+- `GET /api/company/get`
+
+### Industry API
+
+- `GET /api/industry/get`
+
+### Authentication APIs
+
+- `POST /api/job_seeker/register`
+- `POST /api/job_seeker/phone_verify`
+- `POST /api/job_seeker/login`
+
+## Important Data Handling
+
+- Company image URLs are built from the API `company.image` value.
+- Salary is displayed with BDT conversion where needed.
+- Food allowance is shown only when `food_option === 'allowance'`.
+- Date formatting is handled inside the card components.
+- Auth token state is stored with AsyncStorage.
+
+## Folder Structure
+
+```text
+src/
+	api/
+	components/
+		common/
+		landing/
+		layout/
+	navigation/
+	screens/
+	storage/
+	theme/
+	utils/
 ```
 
-## Step 2: Build and run your app
+## Setup Instructions
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
+### 1. Install dependencies
 
 ```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+npm install
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+### 2. Install iOS pods
 
 ```sh
+cd ios
 bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
 bundle exec pod install
+cd ..
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+### 3. Start Metro
 
 ```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+npm start
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### 4. Run Android
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```sh
+npm run android
+```
 
-## Step 3: Modify your app
+### 5. Run iOS
 
-Now that you have successfully run the app, let's make changes!
+```sh
+npm run ios
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Build Instructions
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### Android Debug Build
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+```sh
+cd android
+./gradlew assembleDebug
+```
 
-## Congratulations! :tada:
+### Android Release APK
 
-You've successfully run and modified your React Native App. :partying_face:
+```sh
+cd android
+./gradlew assembleRelease
+```
 
-### Now what?
+The APK will be generated in the Android build outputs folder.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+### iOS Release Build
 
-# Troubleshooting
+Open the iOS project in Xcode and archive the app from there.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## Available Scripts
 
-# Learn More
+- `npm start` - start Metro bundler
+- `npm run android` - run Android app
+- `npm run ios` - run iOS app
+- `npm run lint` - run ESLint
+- `npm test` - run Jest tests
 
-To learn more about React Native, take a look at the following resources:
+## Features Implemented
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- Theme system with `ThemeContext`
+- Animated hero and wave section
+- Landing page composition with multiple reusable sections
+- Trending jobs filtering with `is_trending`
+- Hot jobs filtering with `is_hot`
+- Horizontal auto-scroll for hot jobs
+- Reusable recommendation-style job card
+- Skeleton loaders for better loading states
+- Navigation stack for main app flow
+- Safe API fallbacks that return empty arrays on failure
+
+## Current Screens Available
+
+- Landing
+- Sign in
+- Sign up
+- OTP
+
+## Notes
+
+- The landing page is the primary demo page and satisfies the requirement for at least one working page.
+- This project is organized for UI-focused submission with reusable components and API-driven sections.
+
+## Troubleshooting
+
+If the app does not run correctly:
+
+1. Reinstall dependencies with `npm install`
+2. Reinstall iOS pods with `bundle exec pod install`
+3. Reset Metro with `npm start -- --reset-cache`
+4. Clean and rebuild the native project
+
+## License
+
+This project is intended for assessment and demo use.
