@@ -80,6 +80,7 @@ const TrendingJobsSection = () => {
           renderItem={({ item }) => <TrendingJobCard item={item} />}
           horizontal
           showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
         />
       )}
     </View>
@@ -91,6 +92,10 @@ export default TrendingJobsSection;
 const styles = StyleSheet.create({
   wrapper: {
     paddingVertical: 10,
+  },
+
+  listContent: {
+    paddingHorizontal: 20,
   },
 
   title: {

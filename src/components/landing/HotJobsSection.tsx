@@ -1,38 +1,49 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import { useTheme } from '../../theme/ThemeContext';
 import { getJobs } from '../../api/job';
 import RecommendedJobCard from './RecommendedJobCard';
 
-const CARD_WIDTH = 360; // card width + spacing
+const HORIZONTAL_PADDING = 20;
+const ITEM_GAP = 16;
 
 const HotJobsSection = () => {
   const { theme } = useTheme();
+  const { width } = useWindowDimensions();
 
   const [jobs, setJobs] = useState<any[]>([]);
+  const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true);
   const flatListRef = useRef<FlatList>(null);
 
   const scrollX = useRef(0);
   const currentIndex = useRef(0);
+  const cardWidth = Math.min(360, width - HORIZONTAL_PADDING * 2);
+  const itemWidth = cardWidth + ITEM_GAP;
 
   useEffect(() => {
     fetchJobs();
   }, []);
 
   useEffect(() => {
-    if (jobs.length === 0) return;
+    if (jobs.length === 0 || !isAutoScrollEnabled) return;
 
     const interval = setInterval(() => {
       currentIndex.current = (currentIndex.current + 1) % jobs.length;
 
       flatListRef.current?.scrollToOffset({
-        offset: currentIndex.current * CARD_WIDTH,
+        offset: currentIndex.current * itemWidth,
         animated: true,
       });
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [jobs]);
+  }, [jobs, isAutoScrollEnabled, itemWidth]);
 
   const fetchJobs = async () => {
     const res = await getJobs();
@@ -63,19 +74,22 @@ const HotJobsSection = () => {
         pagingEnabled={false}
         showsHorizontalScrollIndicator={false}
         keyExtractor={item => item.id.toString()}
-        scrollEnabled={false}
+        scrollEnabled
+        onScrollBeginDrag={() => {
+          setIsAutoScrollEnabled(false);
+        }}
         renderItem={({ item }) => (
           <View
             style={{
-              width: CARD_WIDTH,
-              paddingHorizontal: 8,
+              width: cardWidth,
+              marginRight: ITEM_GAP,
             }}
           >
             <RecommendedJobCard item={item} />
           </View>
         )}
         contentContainerStyle={{
-          paddingHorizontal: 8,
+          paddingHorizontal: HORIZONTAL_PADDING,
         }}
       />
     </View>

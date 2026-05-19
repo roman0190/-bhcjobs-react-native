@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -16,7 +22,9 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 const TrendingJobCard = ({ item }: any) => {
   const { theme } = useTheme();
+  const { width } = useWindowDimensions();
   const shimmerValue = useSharedValue(0);
+  const cardWidth = Math.min(340, width - 40);
 
   const shimmerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
@@ -59,7 +67,9 @@ const TrendingJobCard = ({ item }: any) => {
         <Text style={styles.daysText}>{daysLeft} DAYS LEFT</Text>
       </View>
       {/* CARD */}
-      <View style={[styles.card, { backgroundColor: theme.card }]}>
+      <View
+        style={[styles.card, { backgroundColor: theme.card, width: cardWidth }]}
+      >
         <Text style={[styles.jobTitle, { color: theme.text }]}>
           {item.job_title}
         </Text>
@@ -123,13 +133,10 @@ export default TrendingJobCard;
 const styles = StyleSheet.create({
   cardWrapper: {
     position: 'relative',
-    marginRight: 5,
+    marginRight: 16,
     paddingTop: 10,
-    paddingLeft: 30,
   },
   card: {
-    width: 340,
-    marginRight: 16,
     borderRadius: 20,
     padding: 18,
     position: 'relative',
@@ -146,7 +153,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 20,
     zIndex: 999,
-    elevation: 5,
+    // elevation: 5,
   },
 
   daysText: {
